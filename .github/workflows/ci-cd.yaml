@@ -1,5 +1,4 @@
 name: ci-cd
-
 on:
   push:
     branches: [main]
@@ -8,25 +7,17 @@ jobs:
   build-test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 24
-
+      - uses: actions/checkout@v5
       - run: npm ci
       - run: npm test
 
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-
+      - uses: actions/checkout@v5
       - name: Build Docker image
         run: docker build -t app:${{ github.sha }} .
-
       - name: Push image
         run: docker push registry/app:${{ github.sha }}
-
       - name: Update Kubernetes image
         run: kubectl set image deployment/web-deployment web=registry/app:${{ github.sha }}
