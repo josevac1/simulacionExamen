@@ -9,7 +9,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        node-version: 20
+        whit:
+          node-version: 20
 
       - run: npm ci
 
