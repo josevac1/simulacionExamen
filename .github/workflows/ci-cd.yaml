@@ -7,15 +7,27 @@ on:
 jobs:
   build-test:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
-      - run: npm ci
-      - run: npm test
+      - name: Descargar repositorio
+        uses: actions/checkout@v4
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Ejecutar pruebas
+        run: npm test
 
   deploy:
+    needs: build-test
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
-      - run: docker build -t app:${{ github.sha }} .
-      - run: docker push registry/app:${{ github.sha }}
-      - run: kubectl set image deployment/web-deployment web=registry/app:${{ github.sha }}
+      - name: Descargar repositorio
+        uses: actions/checkout@v4
+
+      - name: Construir imagen Docker
+        run: docker build -t app:${{ github.sha }} .
+
+      - name: Simular despliegue
+        run: echo "Despliegue autorizado porque las pruebas terminaron correctamente"
